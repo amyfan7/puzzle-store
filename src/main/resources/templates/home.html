@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Gearwood Puzzle Store</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<div class="home-top-banner">
+    <div th:if="${successMessage}" class="banner-success">
+        <p th:text="${successMessage}"></p>
+    </div>
+</div>
+<div class="home-top">
+    <div>
+        <p class="subtitle">HANDCRAFTED WOODEN PUZZLE STORE</p>
+        <h1>Beautiful puzzles built to challenge, display, and enjoy.</h1>
+        <p>Discover mechanical builds, decorative pieces, and gift-worthy wooden puzzles designed for curious minds and careful hands.</p>
+        <a th:href="@{/products}" class="button">All Puzzles</a>
+        <a th:href="@{/products/search?name=&category=&difficulty=Hard&minPrice=&maxPrice=}" class="button">Hard Puzzles</a>
+        <a th:href="@{/products/search?name=&category=&difficulty=Medium&minPrice=&maxPrice=}" class="button">Medium Puzzles</a>
+        <a th:href="@{/products/search?name=&category=&difficulty=Easy&minPrice=&maxPrice=}" class="button">Easy Puzzles</a>
+
+        <div class="home-top-cards">
+            <div class="home-top-card">
+                <h2 th:text="${totalCount}">30</h2>
+                <p>Products</p>
+            </div>
+            <div class="home-top-card">
+                <h2 th:text="${categories}">7</h2>
+                <p>Categories</p>
+            </div>
+            <div class="home-top-card">
+                <h2 th:text="${difficulties}">3</h2>
+                <p>Difficulty Levels</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="home-top-box">
+        <h2>Why Gearwood?</h2>
+        <ul>
+            <li><i class="fa-solid fa-puzzle-piece fa-sm"></i>&nbsp;&nbsp;&nbsp;Precision-cut wooden puzzle designs</li>
+            <li><i class="fa-solid fa-puzzle-piece fa-sm"></i>&nbsp;&nbsp;&nbsp;Difficulty levels for casual and expert builders</li>
+            <li><i class="fa-solid fa-puzzle-piece fa-sm"></i>&nbsp;&nbsp;&nbsp;Great for gifts, display shelves, and collectors</li>
+            <li><i class="fa-solid fa-puzzle-piece fa-sm"></i>&nbsp;&nbsp;&nbsp;Detailed product pages with multiple images</li>
+        </ul>
+    </div>
+</div>
+
+<div class="home-categories">
+    <p class="subtitle">SHOP BY CATEGORY</p>
+    <h2>Find the style that fits your interest</h2>
+    <div class="home-category-cards">
+        <a th:href="@{/products/search?name=&category=Mechanical&difficulty=&minPrice=&maxPrice=}" class="home-category-card">
+            <span>Mechanical</span><p>Moving parts, interlocking components, and satisfying assembly</p>.</a>
+        <a th:href="@{/products/search?name=&category=Historical&difficulty=&minPrice=&maxPrice=}" class="home-category-card">
+            <span>Historical</span><p>Models inspired by classic structures, eras, and designs.</p></a>
+        <a th:href="@{/products/search?name=&category=Nautical&difficulty=&minPrice=&maxPrice=}" class="home-category-card">
+            <span>Nautical</span><p>Ships, sea-inspired models, and maritime-themed builds.</p></a>
+        <a th:href="@{/products/search?name=&category=Sci-Fi&difficulty=&minPrice=&maxPrice=}" class="home-category-card">
+            <span>Sci-Fi</span><p>Futuristic forms and imaginative builds for puzzle fans.</p></a>
+        <a th:href="@{/products/search?name=&category=Fantasy&difficulty=&minPrice=&maxPrice=}" class="home-category-card">
+            <span>Fantasy</span><p>Magical themes, imaginative silhouettes, and display-worthy pieces.</p></a>
+        <a th:href="@{/products/search?name=&category=Architecture&difficulty=&minPrice=&maxPrice=}" class="home-category-card">
+            <span>Architecture</span><p>Buildable structures and landmark-inspired puzzle models.</p></a>
+        <a th:href="@{/products/search?name=&category=Decorative&difficulty=&minPrice=&maxPrice=}" class="home-category-card">
+            <span>Decorative</span><p>Puzzles that look just as good on a shelf as they do in progress.</p></a>
+    </div>
+</div>
+
+<div class="home-featured">
+    <p class="subtitle">FEATURED</p>
+    <div class="home-featured-title">
+        <h2>Popular puzzles to start with</h2>
+        <a th:href="@{/products}">View all products >></a>
+    </div>
+    <div class="home-featured-cards">
+        <div th:each="puzzle, stat : ${puzzles}" class="home-featured-card">
+            <a th:href="@{/products/{productId}(productId=${puzzle.productId})}">
+                <img th:src="@{'/images/' + ${puzzle.productId} + '-01.jpg'}" alt="Product Image" onerror="
+                this.onerror = null;
+                this.src = '/images/default.jpg';">
+                <div class="home-featured-card-text">
+                    <div class="cat-diff-labels">
+                        <p th:text="${puzzle.category}"></p>
+                        <p th:text="${puzzle.difficulty}"></p>
+                    </div>
+                    <h3 th:text="${puzzle.name}">Name</h3>
+                    <p th:text="${puzzle.shortDescription}" class="description">Description</p>
+                    <div class="price-pieces-labels">
+                        <p class="price-label">$<span th:text="${puzzle.price}" ></span></p>
+                        <p class="pieces-label"><span th:text="${puzzle.pieces}"></span> pieces</p>
+                    </div>
+                    <p sec:authorize="hasRole('ADMIN')" th:if="${puzzle.active}" class="active-tag">Active</p>
+                    <p sec:authorize="hasRole('ADMIN')" th:if="${!puzzle.active}" class="inactive-tag">Inactive</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="home-why">
+    <p class="subtitle">WHY SHOP HERE</p>
+    <h2>A better puzzle-buying experience</h2>
+    <div class="home-why-cards">
+        <div class="home-why-card">
+            <p><span>Craftsmanship First</span></p>
+            <p>Warm materials, clean design, and display-friendly builds make each puzzle feel substantial.</p>
+        </div>
+        <div class="home-why-card">
+            <p><span>Clear Difficulty Levels</span></p>
+            <p>Browse easy, medium, and hard builds so shoppers can quickly find a good match.</p>
+        </div>
+        <div class="home-why-card">
+            <p><span>Gift-Ready Selection</span></p>
+            <p>Wooden puzzles make strong gifts for hobbyists, collectors, students, and makers.</p>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

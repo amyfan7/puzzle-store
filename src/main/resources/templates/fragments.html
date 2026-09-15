@@ -1,0 +1,81 @@
+<!doctype html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/15e5b9ef86.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <div th:fragment="header">
+      <header>
+        <div class="header-left">
+          <i class="fa-solid fa-puzzle-piece fa-xl"></i>
+          <a th:href="@{/}"><h2>Gearwood</h2></a>
+        </div>
+        <div class="header-right">
+          <p sec:authorize="isAuthenticated()" class="welcome-banner">
+            Welcome,
+            <span th:text="${#authentication.principal.firstName}"></span>
+          </p>
+
+          <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/products}">Products</a></li>
+
+            <li sec:authorize="isAuthenticated()">
+              <a th:href="@{/cart}"
+                ><span
+                  ><i class="fa-solid fa-cart-arrow-down fa-sm"></i
+                  >&nbsp;&nbsp;Cart</span
+                >
+              </a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+              <a th:href="@{/account}"><span><i class="fa-solid fa-circle-user"></i>&nbsp;&nbsp;Account</span></a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+              <form th:action="@{/logout}" method="post" class="logout-form">
+                <button type="submit">Logout</button>
+              </form>
+            </li>
+
+            <li sec:authorize="!isAuthenticated()">
+              <a th:href="@{/register}">Register </a>
+            </li>
+            <li sec:authorize="!isAuthenticated()">
+              <a th:href="@{/login}">Login </a>
+            </li>
+          </ul>
+        </div>
+      </header>
+    </div>
+
+    <div th:fragment="footer">
+      <footer>
+        <div>
+          <p class="subtitle">START EXPLORING</p>
+          <h3>Ready to find your next build?</h3>
+          <p>
+            Browse the full collection and discover puzzles by category,
+            difficulty, and price.
+          </p>
+        </div>
+
+        <a th:href="@{/products}" class="button">Shop Now</a>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Account | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<div class="account-body">
+    <div class="account-top">
+        <h2>Account</h2>
+        <div th:if="${successMessage}" class="banner-success">
+            <p th:text="${successMessage}"></p>
+        </div>
+    </div>
+
+    <div class="account-cards">
+        <div class="account-middle">
+            <div class="profile-info">
+                <h3>Profile Information</h3>
+                <p>First Name: <span th:text="${user.firstName}"></span></p>
+                <p>Last Name: <span th:text="${user.lastName}"></span></p>
+                <p>Email: <span th:text="${user.email}"></span></p>
+                <p>Role: <span th:text="${user.role.name}"></span></p>
+            </div>
+
+            <div class="profile-actions">
+                <h3>Account Actions</h3>
+                <div class="profile-actions-buttons">
+                    <a th:href="@{/account/edit}" class="button">Edit Profile</a>
+                    <a th:href="@{/account/password}" class="button">Change Password</a>
+                    <a th:href="@{/cart}" class="button">View Cart</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="account-order-history">
+            <h3>Order History</h3>
+            <div class="account-order-history-card" th:each="order : ${orders}">
+                <div>
+                    <p>Order #: <span th:text="${order.orderNumber}"></span></p>
+                    <p><span th:text="${#temporals.format(order.dateTime, 'MM-dd-yyyy')}"></span></p>
+                </div>
+                <div>
+                    <p>Status: <span th:text="${order.status}"></span></p>
+                    <p th:text="|$${order.totalAmount}|"></p>
+                </div>
+                <a th:href="@{/account/orders/{orderNumber}(orderNumber=${order.orderNumber})}"
+                   class="continue-shopping">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

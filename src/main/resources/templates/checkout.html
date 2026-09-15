@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<div class="checkout-body">
+    <h2>Checkout</h2>
+    <div class="checkout-body-top">
+        <a th:href="@{/cart}" class="back-button"><i class="fa-solid fa-arrow-left-long"></i>&nbsp;&nbsp;Back to Cart</a>
+        <div th:if="${errorMessage}" class="banner-error">
+            <p th:text="${errorMessage}"></p>
+        </div>
+    </div>
+
+    <div class="checkout-cards">
+        <div class="shipping-payment">
+            <form method="post" th:action="@{/checkout}" th:object="${checkoutInfo}" enctype="multipart/form-data">
+                <div class="shipping-info">
+                    <h3>Shipping Information</h3>
+                    <div>
+                        <div class="label-error">
+                            <label for="fullName">Full Name</label>
+                            <label th:if="${#fields.hasErrors('shipping.fullName')}"
+                                   th:errors="*{shipping.fullName}" class="error-message"></label>
+                        </div>
+                        <input id="fullName" type="text" th:field="*{shipping.fullName}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="address1">Address Line 1</label>
+                            <label th:if="${#fields.hasErrors('shipping.address1')}"
+                                   th:errors="*{shipping.address1}" class="error-message"></label>
+                        </div>
+                        <input id="address1" type="text" th:field="*{shipping.address1}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="address2">Address Line 2</label>
+                            <label th:if="${#fields.hasErrors('shipping.address2')}"
+                                   th:errors="*{shipping.address2}" class="error-message"></label>
+                        </div>
+                        <input id="address2" type="text" th:field="*{shipping.address2}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="city">City</label>
+                            <label th:if="${#fields.hasErrors('shipping.city')}"
+                                   th:errors="*{shipping.city}" class="error-message"></label>
+                        </div>
+                        <input id="city" type="text" th:field="*{shipping.city}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="state">State</label>
+                            <label th:if="${#fields.hasErrors('shipping.state')}"
+                                   th:errors="*{shipping.state}" class="error-message"></label>
+                        </div>
+                        <input id="state" type="text" th:field="*{shipping.state}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="zipCode">Zip Code</label>
+                            <label th:if="${#fields.hasErrors('shipping.zipCode')}"
+                                   th:errors="*{shipping.zipCode}" class="error-message"></label>
+                        </div>
+                        <input id="zipCode" type="number" th:field="*{shipping.zipCode}">
+                    </div>
+                </div>
+
+                <div class="payment-info">
+                    <h3>Payment Information</h3>
+                    <label th:if="${paymentError}" th:text="${paymentError}" class="error-message"></label>
+                    <div>
+                        <div class="label-error">
+                            <label for="cardholderName">Cardholder Name</label>
+                        </div>
+                        <input id="cardholderName" type="text" th:field="*{payment.cardholderName}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="cardNumber">Card Number</label>
+                        </div>
+                        <input id="cardNumber" type="number" th:field="*{payment.cardNumber}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="expMonth">Expiration Month (MM)</label>
+                        </div>
+                        <input id="expMonth" type="number" th:field="*{payment.expirationMonth}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="expYear">Expiration Year (YYYY)</label>
+                        </div>
+                        <input id="expYear" type="number" th:field="*{payment.expirationYear}">
+                    </div>
+                    <div>
+                        <div class="label-error">
+                            <label for="cvv">CVV</label>
+                        </div>
+                        <input id="cvv" type="number" th:field="*{payment.cvv}">
+                    </div>
+                </div>
+                <button type="submit" class="button">Place Order</button>
+            </form>
+        </div>
+
+        <div class="cart-total">
+            <h3>Order Summary</h3>
+
+            <p class="order-items-header">Items</p>
+            <div class="order-items" th:each="item : ${cart}">
+                <div class="order-item">
+                    <p><span th:text="${item.puzzle.name}"></span> <span th:text="|(${item.quantity})|" class="item-quantity"></span></p>
+                    <p th:text="|$${item.puzzle.price * item.quantity}|" class="cart-total-bold"></p>
+                </div>
+            </div>
+
+            <div class="horizontal-line"></div>
+
+            <div class="order-subtotals">
+                <div>
+                    <p>Subtotal: </p>
+                    <p><span th:text="|$${subtotal}|" class="cart-total-bold"></span></p>
+                </div>
+                <div>
+                    <p>Tax: </p>
+                    <p><span th:text="|$${tax}|" class="cart-total-bold"></span></p>
+                </div>
+                <div>
+                    <p>Shipping: </p>
+                    <p><span th:text="|$${shipping}|" class="cart-total-bold"></span></p>
+                </div>
+                <p th:if="${shipping.compareTo(T(java.math.BigDecimal).ZERO) == 0}"
+                   class="free-shipping-banner">You qualify for free shipping!</p>
+            </div>
+
+            <div class="horizontal-line"></div>
+
+            <div class="order-total">
+                <p>Total: </p>
+                <p><span th:text="|$${total}|"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

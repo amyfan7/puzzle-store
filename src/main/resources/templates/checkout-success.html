@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Complete | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<div class="checkout-success-body">
+    <div class="checkout-success-card">
+        <h2>Thank you for your order!</h2>
+        <p>Your order has been placed successfully.</p>
+        <p class="order-number">Order Number: <span th:text="${order.orderNumber}"></span></p>
+        <div class="checkout-success-buttons">
+            <a th:href="@{/products}" class="button">Continue Shopping</a>
+            <a th:href="@{/account}" class="continue-shopping">My Account</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

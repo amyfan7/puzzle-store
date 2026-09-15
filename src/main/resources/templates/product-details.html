@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Details | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div th:replace="~{fragments :: header}"></div>
+    <div class="product-details-body">
+      <div class="product-details-top">
+        <a th:href="@{/products}" class="back-button"><i class="fa-solid fa-arrow-left-long"></i>&nbsp;&nbsp;Back to Products</a>
+
+        <div th:if="${successMessage}" class="banner-success">
+          <p th:text="${successMessage}"></p>
+        </div>
+
+        <div th:if="${errorMessage}" class="banner-error">
+          <p th:text="${errorMessage}"></p>
+        </div>
+      </div>
+
+      <div class="product-details-card">
+        <div class="product-details-card-img">
+          <img id="mainImage" th:src="@{'/images/' + ${puzzle.productId} + '-01.jpg'}" alt="Product Image"
+               class="img-main" onerror="this.onerror = null; this.src = '/images/default.jpg';"/>
+          <div class="img-extras">
+            <img th:each="img : ${imgs}" th:src="@{'/images/' + ${img}}" class="img-extra"/>
+          </div>
+        </div>
+
+        <div class="product-details-card-right">
+          <div class="product-details-card-text">
+            <div class="product-details-card-title">
+              <p sec:authorize="hasRole('ADMIN')" th:if="${puzzle.active}" class="active-tag">Active</p>
+              <p sec:authorize="hasRole('ADMIN')" th:if="${!puzzle.active}" class="inactive-tag">Inactive</p>
+              <h2 th:text="${puzzle.name}"></h2>
+            </div>
+
+            <p th:text="${puzzle.shortDescription}" class="description"></p>
+            <p>Price: <span th:text="|$${puzzle.price}|" class="product-card-price"></span></p>
+            <p>Manufacturer: <span th:text="${puzzle.manufacturerName}"></span></p>
+            <p>Pieces: <span th:text="${puzzle.pieces}"></span></p>
+            <p>Category: <span th:text="${puzzle.category}"></span></p>
+            <p>Difficulty: <span th:text="${puzzle.difficulty}"></span></p>
+          </div>
+
+          <div sec:authorize="hasRole('ADMIN')" class="edit-activate-product">
+            <a th:href="@{/products/{productId}/edit(productId=${puzzle.productId})}" class="button">Edit Product</a>
+
+            <form th:action="@{/products/{productId}/active(productId=${puzzle.productId})}" method="post">
+              <button th:if="${!puzzle.active}" type="submit" class="activate-button">Activate</button>
+              <button th:if="${puzzle.active}" type="submit" class="deactivate-button">Deactivate</button>
+            </form>
+
+            <form th:action="@{/products/{productId}/delete(productId=${puzzle.productId})}"
+                  method="post" class="delete-button">
+              <button type="submit" class="button">Delete</button>
+            </form>
+          </div>
+
+          <div class="product-details-card-add-cart">
+            <h3>Add to Cart</h3>
+            <div class="add-cart-login" sec:authorize="!isAuthenticated()">
+              <p>Please log in to add this item to your cart</p>
+              <a th:href="@{/login(redirect=${currentUrl})}" class="button">Login</a>
+            </div>
+            <form class="add-cart-quantity" sec:authorize="isAuthenticated()" method="post"
+              th:action="@{/products/{productId}(productId=${puzzle.productId})}" th:object="${cartItem}">
+              <label>Quantity:
+                <input name="quantity" type="number" min="1" th:value="1"/></label>
+              <button class="button" type="submit">Add to cart</button>
+            </form>
+          </div>
+
+          <div class="product-details-long-description">
+            <h3>Details</h3>
+            <p th:text="${puzzle.longDescription}"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll(".img-extra").forEach((img) => {
+        img.addEventListener("click", () => {
+          const main = document.getElementById("mainImage");
+          main.src = img.src;
+
+          document
+            .querySelectorAll(".img-extra")
+            .forEach((i) => i.classList.remove("active"));
+
+          img.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Account | Gearwood</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<div class="edit-account-body">
+  <div class="edit-account-container">
+    <a th:href="@{/account}" class="back-button">
+      <i class="fa-solid fa-arrow-left-long"></i>&nbsp;&nbsp;Back to Account</a>
+
+    <div class="edit-account-card">
+      <form th:action="@{/account/edit}" method="post"
+            th:object="${name}" enctype="multipart/form-data">
+        <h3>Edit Profile</h3>
+
+        <div>
+          <div class="label-error">
+            <label for="firstName">First Name</label>
+            <label th:if="${#fields.hasErrors('first')}" th:errors="${name.first}" class="error-message"></label>
+          </div>
+          <input id="firstName" th:value="${user.firstName}" name="first" type="text"/>
+        </div>
+
+        <div>
+          <div class="label-error">
+            <label for="lastName">Last Name</label>
+            <label th:if="${#fields.hasErrors('last')}" th:errors="${name.last}" class="error-message"></label>
+          </div>
+          <input id="lastName" th:value="${user.lastName}" name="last" type="text"/>
+        </div>
+
+        <button type="submit" class="button">Save Changes</button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

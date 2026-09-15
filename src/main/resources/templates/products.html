@@ -1,0 +1,89 @@
+<!doctype html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Products | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/15e5b9ef86.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div th:replace="~{fragments :: header}"></div>
+    <div class="products-body">
+
+      <div class="products-body-top">
+        <h2>Products <span th:text="|(${#lists.size(puzzles)})|"></span></h2>
+
+        <div th:if="${successMessage}" class="banner-success">
+          <p th:text="${successMessage}"></p>
+        </div>
+
+        <a th:href="@{/products/new}" class="button" sec:authorize="hasRole('ADMIN')">Add Product</a>
+      </div>
+
+      <div class="products-search">
+        <form th:action="@{/products/search}" method="get" class="products-filter">
+          <input name="name" placeholder="Search..." th:value="${name}"/>
+
+          <select name="category">
+            <option value="" th:selected="${category == null || category == ''}">All Categories</option>
+            <option value="Mechanical" th:selected="${category == 'Mechanical'}">Mechanical</option>
+            <option value="Historical" th:selected="${category == 'Historical'}">Historical</option>
+            <option value="Nautical" th:selected="${category == 'Nautical'}">Nautical</option>
+            <option value="Sci-Fi" th:selected="${category == 'Sci-Fi'}">Sci-Fi</option>
+            <option value="Fantasy" th:selected="${category == 'Fantasy'}">Fantasy</option>
+            <option value="Architecture" th:selected="${category == 'Architecture'}">Architecture</option>
+            <option value="Decorative" th:selected="${category == 'Decorative'}">Decorative</option>
+          </select>
+
+          <select name="difficulty">
+            <option value="" th:selected="${difficulty == null || difficulty == ''}">All Difficulties</option>
+            <option value="Easy" th:selected="${difficulty == 'Easy'}">Easy</option>
+            <option value="Medium" th:selected="${difficulty == 'Medium'}">Medium</option>
+            <option value="Hard" th:selected="${difficulty == 'Hard'}">Hard</option>
+          </select>
+
+          <input name="minPrice" placeholder="Min Price" type="number" th:value="${minPrice}"/>
+
+          <input name="maxPrice" placeholder="Max Price" type="number" th:value="${maxPrice}"/>
+
+          <button type="submit">Search</button>
+        </form>
+        <form th:action="@{/products/search/clear}" method="get">
+          <button type="submit" class="button">Clear</button>
+        </form>
+      </div>
+      <br />
+
+      <div class="product-cards">
+        <div th:each="puzzle, stat : ${puzzles}" class="product-card" >
+          <a th:href="@{/products/{productId}(productId=${puzzle.productId})}">
+            <img th:src="@{'/images/' + ${puzzle.productId} + '-01.jpg'}" alt="Product Image"
+              onerror="this.onerror = null;
+                this.src = '/images/default.jpg';" height="200"/>
+            <h3 th:text="${puzzle.name}">Name</h3>
+            <p th:text="${puzzle.shortDescription}" class="description">Description</p>
+            <p>Price: <span th:text="|$${puzzle.price}|" class="product-card-price"></span></p>
+            <p>Manufacturer: <span th:text="${puzzle.manufacturerName}"></span></p>
+            <p>Category: <span th:text="${puzzle.category}"></span></p>
+            <p>Difficulty: <span th:text="${puzzle.difficulty}"></span></p>
+            <p sec:authorize="hasRole('ADMIN')" th:if="${puzzle.active}" class="active-tag-products">Active</p>
+            <p sec:authorize="hasRole('ADMIN')" th:if="${!puzzle.active}" class="inactive-tag-products">Inactive</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

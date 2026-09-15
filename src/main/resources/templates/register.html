@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<div class="register-body">
+    <div class="register-card">
+        <h2>Create Account</h2>
+
+        <form method="post" th:action="@{/register}" th:object="${user}" enctype="multipart/form-data">
+            <div class="register-input-container">
+                <div class="label-error">
+                    <label for="firstName" >First Name</label>
+                    <label th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error-message"></label>
+                </div>
+                <input id="firstName" th:field="*{firstName}" type="text"/>
+            </div>
+
+            <div class="register-input-container">
+                <div class="label-error">
+                    <label for="lastName" >Last Name</label>
+                    <label th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error-message"></label>
+                </div>
+                <input id="lastName" th:field="*{lastName}" type="text">
+            </div>
+
+            <div class="register-input-container">
+                <div class="label-error">
+                    <label for="email" >Email</label>
+                    <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></label>
+                </div>
+                <input id="email" th:field="*{email}" type="email"/>
+            </div>
+
+            <div class="register-input-container">
+                <div class="label-error">
+                    <label for="password" >Password</label>
+                    <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></label>
+                </div>
+                <input id="password" th:field="*{password}" type="password">
+            </div>
+
+            <div class="register-input-container">
+                <div class="label-error">
+                    <label for="confirmPassword" >Confirm Password</label>
+                </div>
+                <input id="confirmPassword" name="confirmPassword" type="password">
+            </div>
+
+            <button type="submit" class="button" >Create Account</button>
+        </form>
+
+        <div>
+            <p>Already have an account? <a th:href="@{/login}">Login</a></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

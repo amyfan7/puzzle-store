@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<div class="login-body">
+
+    <div class="login-card">
+        <div class="login-card-title">
+            <h2>Login</h2>
+            <div th:if="${successMessage}" class="banner-success">
+                <p th:text="${successMessage}"></p>
+            </div>
+        </div>
+
+        <form method="post" th:action="@{/login}" th:object="${user}" enctype="multipart/form-data">
+            <div class="login-input-container">
+                <div class="label-error">
+                    <label for="email">Email</label>
+                    <label th:if="${errorMessage}" th:text="${errorMessage}" class="error-message"></label>
+                </div>
+
+                <input id="email" th:field="*{email}" type="text"/>
+            </div>
+
+            <div class="login-input-container">
+                <label for="password">Password</label>
+                <input id="password" th:field="*{password}" type="password"/>
+            </div>
+
+            <button class="button" type="submit">Login</button>
+            <input type="hidden" name="redirect" th:value="${param.redirect}" />
+        </form>
+
+        <div>
+            <p>Don't have an account? <a th:href="@{/register}">Register</a></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

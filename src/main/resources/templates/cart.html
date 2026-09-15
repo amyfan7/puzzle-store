@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<div class="cart-body">
+    <div class="cart-title">
+        <h2>Cart</h2>
+        <div th:if="${errorMessage}" class="banner-error">
+            <p th:text="${errorMessage}"></p>
+        </div>
+    </div>
+    <div class="cart-cards">
+        <div class="cart-items">
+            <p th:if="${cart.isEmpty()}" class="empty-cart-message">Your cart is empty</p>
+            <div th:each="item, stat : ${cart}" class="cart-item">
+                <img th:src="@{'/images/' + ${item.puzzle.productId} + '-01.jpg'}" alt="Product Image" height="200"
+                     onerror="
+                        this.onerror = null;
+                        this.src = '/images/default.jpg';
+                      ">
+                <div>
+                    <h3 th:text="${item.puzzle.name}">Name</h3>
+                    <p th:if="${!item.puzzle.active}" class="remove-product-tag">
+                        Product is inactive. Please remove from cart before checkout.</p>
+                    <p>Product ID: <span th:text="${item.puzzle.productId}"></span></p>
+                    <p>Manufacturer: <span th:text="${item.puzzle.manufacturerName}"></span></p>
+                    <p>Category: <span th:text="${item.puzzle.category}"></span></p>
+                    <p>Difficulty: <span th:text="${item.puzzle.difficulty}"></span></p>
+                    <p>Price: <span th:text="|$${item.puzzle.price}|" class="product-card-price"></span></p>
+                    <div class="remove-view">
+                        <form class="cart-item-quantity" method="post" th:action="@{/cart}"
+                              th:object="${cartItem}" enctype="multipart/form-data">
+                            <p>Quantity:</p>
+                            <input type="number" th:value="${item.quantity}" name="quantity">
+                            <button type="submit">Update</button>
+                            <input type="hidden" th:value="${item.puzzle.productId}" name="puzzle.productId">
+                        </form>
+                        <form th:action="@{/cart/remove}" method="post" class="remove-button">
+                            <input type="hidden" th:value="${item.puzzle.productId}" name="productId">
+                            <button type="submit" class="button">Remove</button>
+                        </form>
+                        <a th:href="@{/products/{productId}(productId=${item.puzzle.productId})}">View Product</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cart-total">
+            <h3>Order Summary</h3>
+
+            <p class="order-items-header">Items</p>
+            <div class="order-items" th:each="item : ${cart}">
+                <div class="order-item">
+                    <p><span th:text="${item.puzzle.name}"></span> <span th:text="|(${item.quantity})|" class="item-quantity"></span></p>
+                    <p th:text="|$${item.puzzle.price * item.quantity}|" class="cart-total-bold"></p>
+                </div>
+            </div>
+
+            <div class="horizontal-line"></div>
+
+            <div class="order-subtotals">
+                <div>
+                    <p>Subtotal: </p>
+                    <p><span th:text="|$${subtotal}|" class="cart-total-bold"></span></p>
+                </div>
+                <div>
+                    <p>Estimated Tax (8.25%): </p>
+                    <p><span th:text="|$${tax}|" class="cart-total-bold"></span></p>
+                </div>
+                <div>
+                    <p>Estimated Shipping: </p>
+                    <p><span th:text="|$${shipping}|" class="cart-total-bold"></span></p>
+                </div>
+                <p th:if="${shipping.compareTo(T(java.math.BigDecimal).ZERO) == 0}"
+                   class="free-shipping-banner">You qualify for free shipping!</p>
+            </div>
+
+            <div class="horizontal-line"></div>
+
+            <div class="order-total">
+                <p>Estimated Total: </p>
+                <p><span th:text="|$${total}|"></span></p>
+            </div>
+
+            <div class="horizontal-line"></div>
+
+            <div class="cart-buttons">
+                <a th:if="${!cart.isEmpty()}" th:href="@{/checkout}" class="button">Proceed to Checkout</a>
+                <a th:href="@{/products}" class="continue-shopping">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

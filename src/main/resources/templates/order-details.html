@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details | Gearwood</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<div class="order-details-body">
+    <div class="order-details-cards">
+        <h2>Order Details</h2>
+        <a th:href="@{/account}" class="back-button"><i class="fa-solid fa-arrow-left-long"></i>&nbsp;&nbsp;Back to Account</a>
+
+        <div class="order-details-middle">
+            <div class="order-details-info">
+                <h3>Order Information</h3>
+                <p>Order #: <span th:text="${order.orderNumber}"></span></p>
+                <p>Date: <span th:text="${#temporals.format(order.dateTime, 'MM-dd-yyyy')}"></span></p>
+                <p>Status: <span th:text="${order.status}"></span></p>
+                <p>Transaction ID: <span th:text="${order.transactionId}"></span></p>
+                <p>Total: <span th:text="|$${order.totalAmount}|"></span></p>
+            </div>
+
+            <div class="order-details-shipping">
+                <h3>Shipping Information</h3>
+                <p th:text="${shippingInfo.fullName}"></p>
+                <p th:text="${shippingInfo.address1}"></p>
+                <p th:if="${shippingInfo.address2 != null && !shippingInfo.address2.isBlank()}"
+                   th:text="${shippingInfo.address2}"></p>
+                <p th:text="|${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}|"></p>
+            </div>
+        </div>
+
+        <div class="order-details-items">
+            <h3>Items</h3>
+            <div th:each="item : ${items}" class="order-details-item">
+                <img th:src="@{'/images/' + ${item.puzzle.productId} + '-01.jpg'}"
+                     alt="Product Image" class="order-details-img"
+                     onerror="
+                        this.onerror = null;
+                        this.src = '/images/default.jpg';
+                      ">
+                <div class="order-details-item-text">
+                    <div>
+                        <p class="order-details-item-header" th:text="${item.puzzle.name}"></p>
+                        <p th:text="|Quantity: ${item.quantity}|"></p>
+                        <p th:text="|Unit Price: $${item.purchasePrice}|"></p>
+                    </div>
+                    <p><span th:text="|$${item.purchasePrice * item.quantity}|"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

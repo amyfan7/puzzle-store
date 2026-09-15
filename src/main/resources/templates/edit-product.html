@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Product | Gearwood</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/15e5b9ef86.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<div class="edit-product">
+  <div class="edit-product-body">
+    <a th:href="@{/products/{productId}(productId=${puzzle.productId})}" class="back-button"
+    ><i class="fa-solid fa-arrow-left-long"></i>&nbsp;&nbsp;Back to Products</a>
+
+    <div class="edit-product-card">
+      <h3>Edit Product</h3>
+
+      <form th:action="@{/products/{productId}/edit(productId=${puzzle.productId})}" method="post" th:object="${puzzle}" enctype="multipart/form-data">
+        <div class="edit-product-top">
+          <div class="edit-product-productId">
+            <div class="label-error">
+              <label for="code">Product Code</label>
+              <p th:text="${puzzle.productId}" id="code"></p>
+            </div>
+          </div>
+
+          <div>
+            <div class="label-error">
+              <label for="name">Name</label>
+              <label
+                      th:if="${#fields.hasErrors('name')}"
+                      th:errors="*{name}"
+                      class="error-message"
+              ></label>
+            </div>
+            <input id="name" type="text" th:field="*{name}" />
+          </div>
+
+          <div>
+            <div class="label-error">
+              <label for="manufacturer">Manufacturer</label>
+              <label
+                      th:if="${#fields.hasErrors('manufacturer')}"
+                      th:errors="*{manufacturer}"
+                      class="error-message"
+              ></label>
+            </div>
+            <select id="manufacturer" th:field="*{manufacturerName}">
+              <option value="">-- Select Manufacturer --</option>
+              <option th:value="'TimberTech Models'" th:text="'TimberTech Models'">
+                TimberTech Models
+              </option>
+              <option th:value="'Ironwood Creations'" th:text="'Ironwood Creations'">
+                Ironwood Creations
+              </option>
+              <option th:value="'NordicCraft'" th:text="'NordicCraft'">
+                NordicCraft
+              </option>
+              <option th:value="'Orbital Labs'" th:text="'Orbital Labs'">
+                Orbital Labs
+              </option>
+              <option th:value="'ArcaneWorks'" th:text="'ArcaneWorks'">
+                ArcaneWorks
+              </option>
+              <option th:value="'Skyline Structures'" th:text="'Skyline Structures'">
+                Skyline Structures
+              </option>
+              <option th:value="'LumaScenes'" th:text="'LumaScenes'">
+                LumaScenes
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <div class="label-error">
+              <label for="pieces">Pieces</label>
+              <label
+                      th:if="${#fields.hasErrors('pieces')}"
+                      th:errors="*{pieces}"
+                      class="error-message"
+              ></label>
+            </div>
+            <input id="pieces" type="number" th:field="*{pieces}" />
+          </div>
+
+          <div>
+            <div class="label-error">
+              <label for="difficulty">Difficulty</label>
+              <label
+                      th:if="${#fields.hasErrors('difficulty')}"
+                      th:errors="*{difficulty}"
+                      class="error-message"
+              ></label>
+            </div>
+            <select id="difficulty" th:field="*{difficulty}">
+              <option value="">-- Select Difficulty --</option>
+              <option th:value="'Easy'" th:text="'Easy'">Easy</option>
+              <option th:value="'Medium'" th:text="'Medium'">Medium</option>
+              <option th:value="'Hard'" th:text="'Hard'">Hard</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="label-error">
+              <label for="difficulty">Category</label>
+              <label
+                      th:if="${#fields.hasErrors('difficulty')}"
+                      th:errors="*{difficulty}"
+                      class="error-message"
+              ></label>
+            </div>
+            <select th:field="*{category}">
+              <option value="">-- Select Category --</option>
+              <option th:value="'Mechanical'" th:text="'Mechanical'">
+                Mechanical
+              </option>
+              <option th:value="'Historical'" th:text="'Historical'">
+                Historical
+              </option>
+              <option th:value="'Nautical'" th:text="'Nautical'">
+                Nautical
+              </option>
+              <option th:value="'Sci-Fi'" th:text="'Sci-Fi'">Sci-Fi</option>
+              <option th:value="'Fantasy'" th:text="'Fantasy'">
+                Fantasy
+              </option>
+              <option th:value="'Architecture'" th:text="'Architecture'">
+                Architecture
+              </option>
+              <option th:value="'Decorative'" th:text="'Decorative'">
+                Decorative
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <div class="label-error">
+              <label for="price">Price</label>
+              <label
+                      th:if="${#fields.hasErrors('price')}"
+                      th:errors="*{price}"
+                      class="error-message"
+              ></label>
+            </div>
+            <input id="price" type="number" th:field="*{price}" />
+          </div>
+
+          <div>
+            <div class="label-error">
+              <label for="wholesaleCost">Wholesale Cost</label>
+              <label
+                      th:if="${#fields.hasErrors('wholesaleCost')}"
+                      th:errors="*{wholesaleCost}"
+                      class="error-message"
+              ></label>
+            </div>
+            <input
+                    id="wholesaleCost"
+                    type="number"
+                    th:field="*{wholesaleCost}"
+            />
+          </div>
+        </div>
+
+        <div class="edit-product-descriptions">
+          <div>
+            <div class="label-error">
+              <label for="shortDescription">Short Description</label>
+              <label
+                      th:if="${#fields.hasErrors('shortDescription')}"
+                      th:errors="*{shortDescription}"
+                      class="error-message"
+              ></label>
+            </div>
+            <input
+                    id="shortDescription"
+                    type="text"
+                    th:field="*{shortDescription}"
+            />
+          </div>
+
+          <div>
+            <div class="label-error" id="long-description">
+              <label for="longDescription">Long Description</label>
+              <label
+                      th:if="${#fields.hasErrors('longDescription')}"
+                      th:errors="*{longDescription}"
+                      class="error-message"
+              ></label>
+            </div>
+            <textarea id="longDescription" th:field="*{longDescription}" rows="5"></textarea>
+          </div>
+        </div>
+
+        <div class="acquired-date">
+          <label for="date">Acquired Date</label>
+          <input type="date" name="acquiredDate" id="date" th:value="*{acquiredDate}">
+        </div>
+
+        <div class="edit-product-buttons">
+          <button type="submit" class="button">Save Product</button>
+          <a th:href="@{/products/{productId}(productId=${puzzle.productId})}" class="continue-shopping">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
